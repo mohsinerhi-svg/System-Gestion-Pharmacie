@@ -25,7 +25,7 @@ public class Main extends Application {
 
         stage.setTitle("Gestion de Pharmacie");
         stage.setScene(scene);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
     }
 
