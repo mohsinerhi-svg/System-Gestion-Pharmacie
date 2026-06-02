@@ -1,36 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="450.0" prefWidth="400.0" spacing="25.0" stylesheets="@/css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.LoginController">
-    <padding>
-        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
-    </padding>
+<StackPane prefHeight="500.0" prefWidth="750.0" stylesheets="@/css/style.css" style="-fx-background-color: #1e293b;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.LoginController">
 
-    <VBox alignment="CENTER" spacing="10.0">
-        <Label text="🔐 Portail Sécurisé" textFill="#0f172a">
-            <font><Font name="System Bold" size="26.0"/></font>
-        </Label>
-        <Label text="Gestion de Pharmacie Centrale" textFill="#64748b">
-            <font><Font size="14.0"/></font>
-        </Label>
-    </VBox>
+    <VBox alignment="CENTER" spacing="20.0" maxWidth="380.0" maxHeight="440.0" styleClass="sidebar-card">
 
-    <VBox spacing="15.0" styleClass="sidebar-card" prefWidth="320.0">
-        <VBox spacing="5.0">
-            <Label text="Identifiant :" styleClass="field-label" />
-            <TextField fx:id="usernameField" promptText="Nom d'utilisateur" />
+        <VBox alignment="CENTER" spacing="6.0">
+            <Label text="TERMINAL APPLICATIF" textFill="#0284c7" style="-fx-font-weight: 800; -fx-font-size: 13px; -fx-letter-spacing: 1px;"/>
+            <Label text="Pharmacie Centrale d'Encaisser" textFill="#0f172a" style="-fx-font-weight: 700; -fx-font-size: 20px;"/>
+            <Label text="Veuillez vous authentifier pour ouvrir la session" textFill="#64748b" style="-fx-font-size: 12px;"/>
         </VBox>
 
-        <VBox spacing="5.0">
-            <Label text="Mot de passe :" styleClass="field-label" />
-            <PasswordField fx:id="passwordField" promptText="••••••••" />
+        <Separator/>
+
+        <VBox spacing="12.0" alignment="CENTER_LEFT">
+            <VBox spacing="4.0">
+                <Label text="Identifiant Agent / Matricule" styleClass="field-label" />
+                <TextField fx:id="usernameField" promptText="Saisir votre identifiant" prefHeight="35.0" />
+            </VBox>
+
+            <VBox spacing="4.0">
+                <Label text="Code Secret d'Accès" styleClass="field-label" />
+                <PasswordField fx:id="passwordField" promptText="••••••••••••" prefHeight="35.0" />
+            </VBox>
         </VBox>
 
-        <Label fx:id="messageLabel" textFill="#ef4444" wrapText="true" style="-fx-font-weight: 600; -fx-font-size: 12px;" />
+        <Label fx:id="errorLabel" textFill="#ef4444" wrapText="true" alignment="CENTER" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
 
-        <Button onAction="#handleLogin" prefWidth="320.0" styleClass="btn-primary" text="Se connecter au terminal" />
+        <Button onAction="#handleLogin" text="Valider l'authentification" styleClass="btn-primary" prefWidth="340.0" prefHeight="38.0" />
+
     </VBox>
-</VBox>
+</StackPane>

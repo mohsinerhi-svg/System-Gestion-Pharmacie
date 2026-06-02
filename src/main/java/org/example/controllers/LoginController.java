@@ -18,8 +18,9 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
 
+    // --- FIX: Renamed from messageLabel to errorLabel to match FXML ---
     @FXML
-    private Label messageLabel;
+    private Label errorLabel;
 
     private UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
 
@@ -29,47 +30,46 @@ public class LoginController {
         String password = passwordField.getText();
 
         if (username.isEmpty() || password.isEmpty()) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Veuillez remplir tous les champs.");
+            errorLabel.setStyle("-fx-text-fill: red;");
+            errorLabel.setText("Veuillez remplir tous les champs.");
             return;
         }
 
         Utilisateur user = utilisateurDAO.verifierLogin(username, password);
 
         if (user != null) {
-            messageLabel.setStyle("-fx-text-fill: green;");
-            messageLabel.setText("Succès ! Redirection en cours...");
+            errorLabel.setStyle("-fx-text-fill: green;");
+            errorLabel.setText("Succès ! Redirection en cours...");
 
-            // --- NOUVEAU CODE : CHANGEMENT DE FENÊTRE ---
             try {
-                // On choisit le dashboard en fonction du rôle
                 String fxmlFile = "";
                 if (user.getRole().equals("ADMIN")) {
                     fxmlFile = "/views/AdminDashboard.fxml";
                 } else {
-                    // Nous créerons cette page plus tard
                     fxmlFile = "/views/PharmacienDashboard.fxml";
                 }
 
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
-                Scene scene = new Scene(fxmlLoader.load(), 600, 400); // Fenêtre plus grande pour le Dashboard
 
-                // On récupère la fenêtre actuelle pour la remplacer
-                Stage stage = (Stage) messageLabel.getScene().getWindow();
+                // --- BONUS UX FIX: Increased window size for dashboards so they don't look cramped ---
+                Scene scene = new Scene(fxmlLoader.load(), 1280, 800);
+
+                // Get current stage from our renamed label
+                Stage stage = (Stage) errorLabel.getScene().getWindow();
                 stage.setScene(scene);
                 stage.setTitle("Tableau de bord - " + user.getRole());
                 stage.centerOnScreen();
                 stage.show();
 
             } catch (Exception e) {
-                messageLabel.setStyle("-fx-text-fill: red;");
-                messageLabel.setText("Erreur lors de l'ouverture du tableau de bord.");
+                errorLabel.setStyle("-fx-text-fill: red;");
+                errorLabel.setText("Erreur lors de l'ouverture du tableau de bord.");
                 e.printStackTrace();
             }
 
         } else {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Nom d'utilisateur ou mot de passe incorrect.");
+            errorLabel.setStyle("-fx-text-fill: red;");
+            errorLabel.setText("Nom d'utilisateur ou mot de passe incorrect.");
         }
     }
 }

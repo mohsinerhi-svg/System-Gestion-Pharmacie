@@ -1,14 +1,133 @@
-/* Base de l'application - Style Minimaliste Moderne */
+/* --- Global Theme: High-Density Professional ERP --- */
 .root {
-    -fx-background-color: #f8fafc;
-    -fx-font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    -fx-font-family: 'Segoe UI', -fx-font-family;
+    -fx-background-color: #f1f5f9; /* Slate background */
+
+    /* Authentic Software Colors */
+    -fx-primary-brand: #0284c7;  /* Dark Sky Blue */
+    -fx-dark-text: #1e293b;      /* Dark Slate */
+    -fx-border-color: #cbd5e1;   /* Clean light gray borders */
 }
 
-/* Barre supérieure épurée */
+/* --- Clean Compact Top Header --- */
 .app-header {
-    -fx-background-color: #0f172a;
-    -fx-padding: 15 25;
-    -fx-alignment: center-left;
-    -fx-border-color: transparent transparent #cbd5e1 transparent;
-    -fx-border-width: 1;
+    -fx-background-color: #1e293b; /* Pure dark navy slate */
+    -fx-padding: 10 20 10 20;
+    -fx-border-color: transparent transparent #0f172a transparent;
+    -fx-border-width: 1px;
+}
+
+/* --- Classic Desktop Tab Pane --- */
+.tab-pane .tab-header-area {
+    -fx-background-color: #e2e8f0;
+    -fx-padding: 0;
+}
+.tab {
+    -fx-background-color: #cbd5e1;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 4px 4px 0 0;
+    -fx-border-color: #cbd5e1 #cbd5e1 transparent #cbd5e1;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+.tab:hover {
+    -fx-background-color: #d8e2dc;
+}
+.tab:selected {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #94a3b8 #94a3b8 transparent #94a3b8;
+}
+.tab .tab-label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: 600;
+    -fx-font-size: 13px;
+}
+.tab:selected .tab-label {
+    -fx-text-fill: -fx-primary-brand;
+}
+
+/* --- Sharp Functional Information Cards --- */
+.sidebar-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 4px;
+    -fx-padding: 16px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+}
+
+/* --- Production-Ready Form Inputs --- */
+.text-field, .password-field, .combo-box, .date-picker {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-padding: 6 10 6 10;
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 13px;
+}
+.text-field:focused, .password-field:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: -fx-primary-brand;
+}
+
+/* --- Sharp Dense Data Tables --- */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 4px;
+}
+.table-view .column-header-background {
+    -fx-background-color: #f8fafc;
+}
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 32px;
+    -fx-border-color: transparent #e2e8f0 transparent transparent;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+}
+.table-row-cell:filled:selected {
+    -fx-background-color: #bae6fd;
+}
+
+/* --- Clean Native Buttons System --- */
+.button {
+    -fx-font-weight: 600;
+    -fx-font-size: 12px;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 3px;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+}
+.btn-primary { -fx-background-color: #0284c7; }
+.btn-primary:hover { -fx-background-color: #0369a1; }
+
+.btn-success { -fx-background-color: #16a34a; }
+.btn-success:hover { -fx-background-color: #15803d; }
+
+.btn-danger { -fx-background-color: #dc2626; }
+.btn-danger:hover { -fx-background-color: #b91c1c; }
+
+.btn-warning { -fx-background-color: #ea580c; }
+.btn-warning:hover { -fx-background-color: #c2410c; }
+
+.btn-secondary { -fx-background-color: #475569; }
+.btn-secondary:hover { -fx-background-color: #334155; }
+
+.card-title { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #0f172a; }
+.section-title { -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1e293b; }
+.field-label { -fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #475569; }
+.total-bar {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 12 20;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
 }

@@ -3,70 +3,110 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="750.0" prefWidth="1200.0" stylesheets="@/css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.PharmacienDashboardController">
-    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="app-header">
-        <Label text="⚕️ Pharmacie Centrale — Terminal Applicatif" textFill="WHITE">
-            <font><Font name="System Bold" size="22.0"/></font>
-        </Label>
+<VBox prefHeight="800.0" prefWidth="1280.0" stylesheets="@/css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.PharmacienDashboardController">
+
+    <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="app-header">
+        <VBox>
+            <Label text="PHARMAGEST CENTRAL SYSTEM" textFill="WHITE" style="-fx-font-weight: 800; -fx-font-size: 16px;"/>
+            <Label text="Opérateur connecté: Session Pharmacien Officine" textFill="#94a3b8" style="-fx-font-size: 11px;"/>
+        </VBox>
         <HBox HBox.hgrow="ALWAYS" />
-        <Button onAction="#handleLogout" styleClass="btn-danger" text="🔒 Déconnexion" />
+        <Button onAction="#handleLogout" styleClass="btn-danger" text="🔒 Fermer Session (Déconnexion)" />
     </HBox>
 
     <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <tabs>
             <Tab text="🛒 Caisse &amp; Dispensation">
-                <HBox spacing="25.0" style="-fx-padding: 25 20 20 20;">
-                    <VBox spacing="15.0" prefWidth="380.0" styleClass="sidebar-card">
-                        <Label text="📝 Nouvelle Ligne d'Achat" styleClass="card-title" />
-                        <Label text="Associer un Client :" styleClass="field-label"/>
-                        <ComboBox fx:id="clientCombo" promptText="Client de passage..." prefWidth="380.0" />
-                        <Label text="Sélectionner le Médicament :" styleClass="field-label"/>
-                        <ComboBox fx:id="medicamentVenteCombo" promptText="Rechercher une référence..." prefWidth="380.0" />
-                        <Label text="Quantité à délivrer :" styleClass="field-label"/>
-                        <TextField fx:id="quantiteVenteField" promptText="Ex: 2" />
-                        <Button onAction="#handleAjouterAuPanier" text="➕ Ajouter au Panier" prefWidth="380.0" styleClass="btn-primary"/>
-                        <Label fx:id="venteMessageLabel" textFill="#ef4444" wrapText="true" style="-fx-font-weight: bold;" />
+                <HBox spacing="20.0" style="-fx-padding: 20;">
+                    <VBox spacing="15.0" prefWidth="360.0" styleClass="sidebar-card">
+                        <Label text="Saisie Ligne de Vente" styleClass="card-title" />
+
+                        <VBox spacing="4.0">
+                            <Label text="Client affecté :" styleClass="field-label"/>
+                            <ComboBox fx:id="clientCombo" promptText="Sélectionner client..." prefWidth="360.0" />
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                            <Label text="Référence article / Médicament :" styleClass="field-label"/>
+                            <ComboBox fx:id="medicamentVenteCombo" promptText="Rechercher produit..." prefWidth="360.0" />
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                            <Label text="Quantité délivrée :" styleClass="field-label"/>
+                            <TextField fx:id="quantiteVenteField" promptText="Ex: 1" prefHeight="34.0"/>
+                        </VBox>
+
+                        <Button onAction="#handleAjouterAuPanier" text="Ajouter au ticket" prefWidth="360.0" prefHeight="36.0" styleClass="btn-primary"/>
+
+                        <HBox spacing="10.0">
+                            <Button onAction="#handleRetirerDuPanier" text="Retirer ligne" styleClass="btn-secondary" HBox.hgrow="ALWAYS" prefWidth="180.0"/>
+                            <Button onAction="#handleViderPanier" text="Vider ticket" styleClass="btn-danger" HBox.hgrow="ALWAYS" prefWidth="180.0"/>
+                        </HBox>
+
+                        <Label fx:id="venteMessageLabel" textFill="#ef4444" wrapText="true" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
                     </VBox>
-                    <VBox spacing="15.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-                        <Label text="🛒 Panier Patient Actuel" styleClass="section-title" />
+
+                    <VBox spacing="15.0" HBox.hgrow="ALWAYS">
+                        <Label text="Détails de la Facturation Courante" styleClass="section-title" />
                         <TableView fx:id="panierTable" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="panierNomCol" prefWidth="320.0" text="Désignation de la Référence" />
+                                <TableColumn fx:id="panierNomCol" prefWidth="420.0" text="Désignation Produit" />
                                 <TableColumn fx:id="panierQteCol" prefWidth="120.0" text="Quantité" />
-                                <TableColumn fx:id="panierPrixCol" prefWidth="180.0" text="Sous-Total (Dhs)" />
+                                <TableColumn fx:id="panierPrixCol" prefWidth="200.0" text="Sous-Total (Dhs)" />
                             </columns>
                         </TableView>
-                        <HBox alignment="CENTER_RIGHT" spacing="25.0" styleClass="total-bar">
-                            <Label text="NET A PAYER :"><font><Font name="System Bold" size="16.0"/></font></Label>
-                            <Label fx:id="totalLabel" text="0.00 Dhs" textFill="#10b981"><font><Font name="System Bold" size="24.0"/></font></Label>
-                            <Button onAction="#handleValiderVente" text="💾 Encaisser la Transaction" prefWidth="220.0" prefHeight="42.0" styleClass="btn-success"/>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="20.0" styleClass="total-bar">
+                            <Label text="NET GLOBAL A PAYER :" style="-fx-font-weight: 700; -fx-font-size: 13px; -fx-text-fill: #475569;"/>
+                            <Label fx:id="totalLabel" text="0.00 Dhs" style="-fx-text-fill: #16a34a; -fx-font-weight: 800; -fx-font-size: 24px;" />
+                            <Button onAction="#handleValiderVente" text="Encaisser &amp; Archiver" prefWidth="220.0" prefHeight="38.0" styleClass="btn-success"/>
                         </HBox>
                     </VBox>
                 </HBox>
             </Tab>
 
             <Tab text="📦 Gestion de l'Inventaire">
-                <HBox spacing="25.0" style="-fx-padding: 25 20 20 20;">
-                    <VBox spacing="15.0" prefWidth="320.0" styleClass="sidebar-card">
-                        <Label text="📥 Entrée de Produit" styleClass="card-title" />
+                <HBox spacing="20.0" style="-fx-padding: 20;">
+                    <VBox spacing="14.0" prefWidth="340.0" styleClass="sidebar-card">
+                        <Label text="Édition Fiche Produit" styleClass="card-title" />
+
                         <TextField fx:id="nomField" promptText="Nom commercial" />
                         <TextField fx:id="categorieField" promptText="Classe thérapeutique" />
                         <TextField fx:id="prixField" promptText="Prix public (Dhs)" />
-                        <TextField fx:id="stockField" promptText="Quantité reçue" />
-                        <DatePicker fx:id="dateExpirationPicker" promptText="Date de péremption" prefWidth="320.0" />
-                        <Button onAction="#handleAjouterMedicament" text="Valider Entrée Stock" prefWidth="320.0" styleClass="btn-success"/>
-                        <Label fx:id="stockMessageLabel" textFill="#ef4444" wrapText="true"/>
+                        <TextField fx:id="stockField" promptText="Quantité en stock" />
+                        <DatePicker fx:id="dateExpirationPicker" promptText="Date de péremption" prefWidth="340.0" />
+
+                        <HBox spacing="10.0">
+                            <Button onAction="#handleAjouterMedicament" text="Enregistrer" prefWidth="160.0" styleClass="btn-success"/>
+                            <Button onAction="#handleAnnulerEditionMedicament" text="Annuler" prefWidth="140.0" styleClass="btn-secondary"/>
+                        </HBox>
+
+                        <Separator/>
+
+                        <Label text="Réapprovisionnement Lot" styleClass="field-label" style="-fx-text-fill: #0284c7;"/>
+                        <HBox spacing="10.0">
+                            <TextField fx:id="reapprovQteField" promptText="Qte" prefWidth="120.0" />
+                            <Button onAction="#handleReapprovisionnement" text="Entrée Stock" styleClass="btn-primary" prefWidth="180.0"/>
+                        </HBox>
+
+                        <Label fx:id="stockMessageLabel" textFill="#ef4444" wrapText="true" style="-fx-font-weight: bold;"/>
                     </VBox>
-                    <VBox HBox.hgrow="ALWAYS" spacing="15.0" VBox.vgrow="ALWAYS">
-                        <Label text="📦 Inventaire des Stocks Actifs (Les stocks &lt; 5 s'affichent automatiquement en rouge)" styleClass="section-title" />
+
+                    <VBox HBox.hgrow="ALWAYS" spacing="15.0">
+                        <HBox spacing="15.0" alignment="CENTER_LEFT">
+                            <TextField fx:id="rechercheStockField" onKeyReleased="#handleRechercheStock" promptText="Filtrer par désignation ou famille de molécules..." HBox.hgrow="ALWAYS" prefHeight="34.0"/>
+                            <Button onAction="#handleModifierMedicament" text="Éditer Fiche" styleClass="btn-warning"/>
+                            <Button onAction="#handleSupprimerMedicament" text="Supprimer Réf" styleClass="btn-danger"/>
+                        </HBox>
+
                         <TableView fx:id="medicamentsTable" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="idCol" prefWidth="60.0" text="ID" />
-                                <TableColumn fx:id="nomCol" prefWidth="240.0" text="Nom du Médicament" />
-                                <TableColumn fx:id="categorieCol" prefWidth="160.0" text="Catégorie" />
-                                <TableColumn fx:id="prixCol" prefWidth="120.0" text="Prix Unitaire" />
-                                <TableColumn fx:id="stockCol" prefWidth="110.0" text="Stock Disponible" />
-                                <TableColumn fx:id="expirationCol" prefWidth="140.0" text="Échéance Expiration" />
+                                <TableColumn fx:id="nomCol" prefWidth="280.0" text="Désignation Article" />
+                                <TableColumn fx:id="categorieCol" prefWidth="180.0" text="Catégorie" />
+                                <TableColumn fx:id="prixCol" prefWidth="120.0" text="Prix public" />
+                                <TableColumn fx:id="stockCol" prefWidth="130.0" text="Stock Logique" />
+                                <TableColumn fx:id="expirationCol" prefWidth="150.0" text="Échéance Péremption" />
                             </columns>
                         </TableView>
                     </VBox>
@@ -74,42 +114,53 @@
             </Tab>
 
             <Tab text="📜 Journal des Ventes">
-                <VBox spacing="15.0" style="-fx-padding: 25 20 20 20;" VBox.vgrow="ALWAYS">
-                    <Label text="📜 Historique Complet des Ventes Encaissées" styleClass="section-title" />
+                <VBox spacing="15.0" style="-fx-padding: 20;" VBox.vgrow="ALWAYS">
+                    <HBox spacing="15.0" alignment="CENTER_LEFT">
+                        <Label text="Registre des transactions clôturées" styleClass="section-title" />
+                        <HBox HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#chargerHistoriqueVentes" text="Actualiser" styleClass="btn-info"/>
+                        <Button onAction="#handleImprimerFacture" text="Rééditer Reçu PDF" styleClass="btn-warning"/>
+                        <Button onAction="#handleAnnulerVente" text="Annuler transaction" styleClass="btn-danger"/>
+                    </HBox>
                     <TableView fx:id="historiqueTable" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="histIdCol" prefWidth="120.0" text="N° Facture" />
-                            <TableColumn fx:id="histDateCol" prefWidth="220.0" text="Date de Vente" />
-                            <TableColumn fx:id="histClientCol" prefWidth="280.0" text="Client Bénéficiaire" />
-                            <TableColumn fx:id="histTotalCol" prefWidth="180.0" text="Total Facturé (Dhs)" />
+                            <TableColumn fx:id="histIdCol" prefWidth="150.0" text="N° Bordereau" />
+                            <TableColumn fx:id="histDateCol" prefWidth="250.0" text="Horodatage" />
+                            <TableColumn fx:id="histClientCol" prefWidth="350.0" text="Bénéficiaire" />
+                            <TableColumn fx:id="histTotalCol" prefWidth="200.0" text="Montant Total Encaissé" />
                         </columns>
                     </TableView>
-                    <HBox spacing="15.0" alignment="CENTER_LEFT">
-                        <Button onAction="#chargerHistoriqueVentes" text="🔄 Rafraîchir la Liste" styleClass="btn-info"/>
-                        <Button onAction="#handleImprimerFacture" text="🖨️ Imprimer le Reçu PDF" styleClass="btn-warning"/>
-                        <Label fx:id="pdfMessageLabel" textFill="#10b981" style="-fx-font-weight: bold;"/>
-                    </HBox>
+                    <Label fx:id="pdfMessageLabel" style="-fx-text-fill: #16a34a; -fx-font-weight: bold;"/>
                 </VBox>
             </Tab>
 
             <Tab text="👥 Répertoire Clients">
-                <HBox spacing="25.0" style="-fx-padding: 25 20 20 20;">
-                    <VBox spacing="15.0" prefWidth="320.0" styleClass="sidebar-card">
-                        <Label text="👤 Fiche Nouveau Client" styleClass="card-title" />
+                <HBox spacing="20.0" style="-fx-padding: 20;">
+                    <VBox spacing="14.0" prefWidth="340.0" styleClass="sidebar-card">
+                        <Label text="Enregistrement Fiche Patient" styleClass="card-title" />
                         <TextField fx:id="clientNomField" promptText="Nom Complet (Obligatoire)" />
-                        <TextField fx:id="clientTelField" promptText="N° de Téléphone" />
-                        <TextField fx:id="clientEmailField" promptText="Adresse Email" />
-                        <Button onAction="#handleAjouterClient" text="Enregistrer Fiche Client" prefWidth="320.0" styleClass="btn-success"/>
+                        <TextField fx:id="clientTelField" promptText="N° Téléphone" />
+                        <TextField fx:id="clientEmailField" promptText="Adresse e-mail" />
+
+                        <HBox spacing="10.0">
+                            <Button fx:id="btnSauvegarderClient" onAction="#handleAjouterClient" text="Valider Fiche" prefWidth="160.0" styleClass="btn-success"/>
+                            <Button onAction="#handleAnnulerEditionClient" text="Annuler" prefWidth="140.0" styleClass="btn-secondary"/>
+                        </HBox>
                         <Label fx:id="clientMessageLabel" textFill="#ef4444" wrapText="true"/>
                     </VBox>
-                    <VBox HBox.hgrow="ALWAYS" spacing="15.0" VBox.vgrow="ALWAYS">
-                        <Label text="👥 Base Nominative des Clients" styleClass="section-title" />
+
+                    <VBox HBox.hgrow="ALWAYS" spacing="15.0">
+                        <HBox spacing="15.0" alignment="CENTER_LEFT">
+                            <TextField fx:id="rechercheClientField" onKeyReleased="#handleRechercheClient" promptText="Filtrer par nom complet, coordonnées..." HBox.hgrow="ALWAYS" prefHeight="34.0"/>
+                            <Button onAction="#handleModifierClient" text="Modifier Fiche" styleClass="btn-warning"/>
+                            <Button onAction="#handleSupprimerClient" text="Supprimer Compte" styleClass="btn-danger"/>
+                        </HBox>
                         <TableView fx:id="clientsTable" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="clientIdCol" prefWidth="80.0" text="ID" />
-                                <TableColumn fx:id="clientNomCol" prefWidth="300.0" text="Nom Complet" />
-                                <TableColumn fx:id="clientTelCol" prefWidth="180.0" text="Téléphone" />
-                                <TableColumn fx:id="clientEmailCol" prefWidth="250.0" text="Adresse Email" />
+                                <TableColumn fx:id="clientIdCol" prefWidth="100.0" text="ID Interne" />
+                                <TableColumn fx:id="clientNomCol" prefWidth="350.0" text="Nom complet" />
+                                <TableColumn fx:id="clientTelCol" prefWidth="200.0" text="Téléphone" />
+                                <TableColumn fx:id="clientEmailCol" prefWidth="300.0" text="Adresse Électronique" />
                             </columns>
                         </TableView>
                     </VBox>
