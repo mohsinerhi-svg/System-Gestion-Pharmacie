@@ -5,6 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 
 public class UtilisateurDAO {
 
@@ -53,5 +57,53 @@ public class UtilisateurDAO {
 
         // Si on arrive ici, c'est que le login a échoué
         return null;
+    }
+
+    public List<Utilisateur> getTousLesUtilisateurs() {
+        List<Utilisateur> liste = new ArrayList<>();
+        String sql = "SELECT id, username, role FROM utilisateurs";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                liste.add(new Utilisateur(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("role")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des utilisateurs.");
+            e.printStackTrace();
+        }
+        return liste;
+    }
+
+    /**
+     * Ajoute un nouvel utilisateur avec un mot de passe sécurisé (hashé).
+     */
+    public boolean ajouterUtilisateur(String username, String passwordEnClair, String role) {
+        String sql = "INSERT INTO utilisateurs (username, password, role) VALUES (?, ?, ?)";
+
+        // On hache le mot de passe avant de le sauvegarder
+        String hash = BCrypt.withDefaults().hashToString(10, passwordEnClair.toCharArray());
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, hash);
+            pstmt.setString(3, role);
+
+            int lignesModifiees = pstmt.executeUpdate();
+            return lignesModifiees > 0; // Retourne true si l'insertion a réussi
+
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de l'ajout de l'utilisateur.");
+            e.printStackTrace();
+            return false;
+        }
     }
 }

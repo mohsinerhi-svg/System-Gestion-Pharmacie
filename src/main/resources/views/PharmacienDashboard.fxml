@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.PharmacienDashboardController">
+
+    <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 20;">
+        <Label text="Espace Pharmacien" textFill="#0275d8">
+            <font><Font name="System Bold" size="24.0"/></font>
+        </Label>
+        <HBox HBox.hgrow="ALWAYS" />
+        <Button onAction="#handleLogout" style="-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-weight: bold;" text="Se déconnecter" />
+    </HBox>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <tabs>
+
+            <Tab text="🛒 Caisse &amp; Ventes">
+                <HBox spacing="20.0" style="-fx-padding: 20;">
+
+                    <VBox spacing="15.0" prefWidth="350.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 15;">
+                        <Label text="Nouvelle Vente"><font><Font name="System Bold" size="18.0"/></font></Label>
+
+                        <Label text="Choisir un médicament :" />
+                        <ComboBox fx:id="medicamentVenteCombo" promptText="Sélectionnez..." prefWidth="350.0" />
+
+                        <Label text="Quantité :" />
+                        <TextField fx:id="quantiteVenteField" promptText="Ex: 2" />
+
+                        <Button onAction="#handleAjouterAuPanier" text="Ajouter au panier" prefWidth="350.0" style="-fx-background-color: #0275d8; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+                        <Label fx:id="venteMessageLabel" textFill="RED" wrapText="true" />
+                    </VBox>
+
+                    <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                        <Label text="Panier Actuel"><font><Font name="System Bold" size="18.0"/></font></Label>
+
+                        <TableView fx:id="panierTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="panierNomCol" prefWidth="250.0" text="Médicament" />
+                                <TableColumn fx:id="panierQteCol" prefWidth="100.0" text="Quantité" />
+                                <TableColumn fx:id="panierPrixCol" prefWidth="150.0" text="Sous-Total (€)" />
+                            </columns>
+                        </TableView>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="20.0" style="-fx-padding: 10; -fx-background-color: #e9ecef; -fx-border-radius: 5;">
+                            <Label text="TOTAL :"><font><Font name="System Bold" size="20.0"/></font></Label>
+                            <Label fx:id="totalLabel" text="0.00 €" textFill="#28a745"><font><Font name="System Bold" size="24.0"/></font></Label>
+                            <Button onAction="#handleValiderVente" text="Valider la Vente" prefWidth="150.0" prefHeight="40.0" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </Tab>
+
+            <Tab text="📦 Gestion des Stocks">
+                <HBox spacing="20.0" style="-fx-padding: 20;">
+
+                    <VBox spacing="15.0" prefWidth="280.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 15;">
+                        <Label text="Nouveau Médicament"><font><Font name="System Bold" size="16.0"/></font></Label>
+                        <TextField fx:id="nomField" promptText="Nom du médicament" />
+                        <TextField fx:id="categorieField" promptText="Catégorie" />
+                        <TextField fx:id="prixField" promptText="Prix unitaire (€)" />
+                        <TextField fx:id="stockField" promptText="Quantité en stock" />
+                        <DatePicker fx:id="dateExpirationPicker" promptText="Date d'expiration" prefWidth="250.0" />
+                        <Button onAction="#handleAjouterMedicament" text="Ajouter au stock" prefWidth="250.0" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Label fx:id="stockMessageLabel" textFill="RED" wrapText="true"/>
+                    </VBox>
+
+                    <VBox HBox.hgrow="ALWAYS" spacing="10.0">
+                        <Label text="Inventaire Actuel"><font><Font name="System Bold" size="16.0"/></font></Label>
+                        <TableView fx:id="medicamentsTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="idCol" prefWidth="50.0" text="ID" />
+                                <TableColumn fx:id="nomCol" prefWidth="180.0" text="Nom" />
+                                <TableColumn fx:id="categorieCol" prefWidth="120.0" text="Catégorie" />
+                                <TableColumn fx:id="prixCol" prefWidth="100.0" text="Prix" />
+                                <TableColumn fx:id="stockCol" prefWidth="80.0" text="Stock" />
+                                <TableColumn fx:id="expirationCol" prefWidth="120.0" text="Expiration" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </HBox>
+            </Tab>
+
+        </tabs>
+
+        <Tab text="📜 Historique des Ventes">
+            <VBox spacing="10.0" style="-fx-padding: 20;">
+                <Label text="Historique des transactions"><font><Font name="System Bold" size="18.0"/></font></Label>
+                <TableView fx:id="historiqueTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="histIdCol" prefWidth="100.0" text="N° Facture" />
+                        <TableColumn fx:id="histDateCol" prefWidth="250.0" text="Date et Heure" />
+                        <TableColumn fx:id="histTotalCol" prefWidth="150.0" text="Total Encaissé (€)" />
+                    </columns>
+                </TableView>
+                <Button onAction="#chargerHistoriqueVentes" text="Rafraîchir l'historique" style="-fx-background-color: #17a2b8; -fx-text-fill: white;"/>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>
