@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
 <VBox prefHeight="700.0" prefWidth="1000.0" stylesheets="@/css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.AdminDashboardController">
-
     <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="app-header">
         <Label text="⚙️ Console d'Administration — Système Global" textFill="WHITE">
             <font><Font name="System Bold" size="22.0"/></font>
@@ -20,20 +18,16 @@
                 <HBox spacing="25.0" style="-fx-padding: 25 20 20 20;">
                     <VBox spacing="15.0" prefWidth="320.0" styleClass="sidebar-card">
                         <Label text="👤 Nouvel Utilisateur" styleClass="card-title" />
-
                         <Label text="Nom d'utilisateur :" styleClass="field-label"/>
                         <TextField fx:id="newUsernameField" promptText="Ex: kamil_pharmacien" />
-
                         <Label text="Mot de passe initial :" styleClass="field-label"/>
                         <PasswordField fx:id="newPasswordField" promptText="••••••••" />
-
                         <Label text="Rôle d'accès :" styleClass="field-label"/>
                         <ComboBox fx:id="roleComboBox" promptText="Sélectionner le rôle..." prefWidth="320.0" />
-
                         <Button onAction="#handleAjouterUtilisateur" text="Créer le Compte" prefWidth="320.0" styleClass="btn-primary"/>
                         <Label fx:id="messageLabel" textFill="#ef4444" wrapText="true" style="-fx-font-weight: 600;" />
                     </VBox>
-                    <VBox HBox.hgrow="ALWAYS" spacing="15.0">
+                    <VBox HBox.hgrow="ALWAYS" spacing="15.0" VBox.vgrow="ALWAYS">
                         <Label text="👥 Comptes Utilisateurs Actifs" styleClass="section-title" />
                         <TableView fx:id="utilisateursTable" VBox.vgrow="ALWAYS">
                             <columns>
@@ -47,8 +41,7 @@
             </Tab>
 
             <Tab text="📊 Performance &amp; Alertes">
-                <VBox spacing="20.0" style="-fx-padding: 25 20 20 20;">
-
+                <VBox spacing="20.0" style="-fx-padding: 25 20 20 20;" VBox.vgrow="ALWAYS">
                     <HBox styleClass="sidebar-card" alignment="CENTER_LEFT" style="-fx-padding: 20 30;">
                         <VBox spacing="5.0">
                             <Label text="CHIFFRE D'AFFAIRES GLOBAL ENCAISSÉ" textFill="#64748b" style="-fx-font-weight: 700; -fx-font-size: 13px;" />

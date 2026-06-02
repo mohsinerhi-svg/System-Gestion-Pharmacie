@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -19,20 +18,16 @@
                 <HBox spacing="25.0" style="-fx-padding: 25 20 20 20;">
                     <VBox spacing="15.0" prefWidth="380.0" styleClass="sidebar-card">
                         <Label text="📝 Nouvelle Ligne d'Achat" styleClass="card-title" />
-
                         <Label text="Associer un Client :" styleClass="field-label"/>
                         <ComboBox fx:id="clientCombo" promptText="Client de passage..." prefWidth="380.0" />
-
                         <Label text="Sélectionner le Médicament :" styleClass="field-label"/>
                         <ComboBox fx:id="medicamentVenteCombo" promptText="Rechercher une référence..." prefWidth="380.0" />
-
                         <Label text="Quantité à délivrer :" styleClass="field-label"/>
                         <TextField fx:id="quantiteVenteField" promptText="Ex: 2" />
-
                         <Button onAction="#handleAjouterAuPanier" text="➕ Ajouter au Panier" prefWidth="380.0" styleClass="btn-primary"/>
                         <Label fx:id="venteMessageLabel" textFill="#ef4444" wrapText="true" style="-fx-font-weight: bold;" />
                     </VBox>
-                    <VBox spacing="15.0" HBox.hgrow="ALWAYS">
+                    <VBox spacing="15.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                         <Label text="🛒 Panier Patient Actuel" styleClass="section-title" />
                         <TableView fx:id="panierTable" VBox.vgrow="ALWAYS">
                             <columns>
@@ -62,7 +57,7 @@
                         <Button onAction="#handleAjouterMedicament" text="Valider Entrée Stock" prefWidth="320.0" styleClass="btn-success"/>
                         <Label fx:id="stockMessageLabel" textFill="#ef4444" wrapText="true"/>
                     </VBox>
-                    <VBox HBox.hgrow="ALWAYS" spacing="15.0">
+                    <VBox HBox.hgrow="ALWAYS" spacing="15.0" VBox.vgrow="ALWAYS">
                         <Label text="📦 Inventaire des Stocks Actifs (Les stocks &lt; 5 s'affichent automatiquement en rouge)" styleClass="section-title" />
                         <TableView fx:id="medicamentsTable" VBox.vgrow="ALWAYS">
                             <columns>
@@ -79,7 +74,7 @@
             </Tab>
 
             <Tab text="📜 Journal des Ventes">
-                <VBox spacing="15.0" style="-fx-padding: 25 20 20 20;">
+                <VBox spacing="15.0" style="-fx-padding: 25 20 20 20;" VBox.vgrow="ALWAYS">
                     <Label text="📜 Historique Complet des Ventes Encaissées" styleClass="section-title" />
                     <TableView fx:id="historiqueTable" VBox.vgrow="ALWAYS">
                         <columns>
@@ -107,7 +102,7 @@
                         <Button onAction="#handleAjouterClient" text="Enregistrer Fiche Client" prefWidth="320.0" styleClass="btn-success"/>
                         <Label fx:id="clientMessageLabel" textFill="#ef4444" wrapText="true"/>
                     </VBox>
-                    <VBox HBox.hgrow="ALWAYS" spacing="15.0">
+                    <VBox HBox.hgrow="ALWAYS" spacing="15.0" VBox.vgrow="ALWAYS">
                         <Label text="👥 Base Nominative des Clients" styleClass="section-title" />
                         <TableView fx:id="clientsTable" VBox.vgrow="ALWAYS">
                             <columns>
