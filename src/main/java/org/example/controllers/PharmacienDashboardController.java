@@ -116,10 +116,10 @@ public class PharmacienDashboardController {
         histTotalCol.setCellValueFactory(new PropertyValueFactory<>("montantTotal"));
 
         // Init Colonnes Clients (si vous avez l'onglet 4)
-        // clientIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        // clientNomCol.setCellValueFactory(new PropertyValueFactory<>("nomComplet"));
-        // clientTelCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
-        // clientEmailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        clientIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        clientNomCol.setCellValueFactory(new PropertyValueFactory<>("nomComplet"));
+        clientTelCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        clientEmailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
         chargerMedicaments();
         chargerHistoriqueVentes();

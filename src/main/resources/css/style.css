@@ -1,58 +1,146 @@
-/* Fond général de l'application */
+/* Base de l'application - Style Minimaliste Moderne */
 .root {
-    -fx-background-color: #f4f7f6;
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-background-color: #f8fafc; /* Gris très clair, reposant */
+    -fx-font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
-/* Style des onglets (Tabs) */
+/* Barre supérieure épurée (Style Doctolib/Stripe) */
+.app-header {
+    -fx-background-color: #0f172a; /* Ardoise Foncé Premium */
+    -fx-padding: 15 25;
+    -fx-alignment: center-left;
+    -fx-border-color: transparent transparent #cbd5e1 transparent;
+    -fx-border-width: 1;
+}
+
+/* Onglets de navigation discrets et élégants */
 .tab-pane .tab-header-area .tab-header-background {
     -fx-background-color: #ffffff;
-}
-.tab-pane .tab {
-    -fx-background-color: #e9ecef;
-    -fx-background-radius: 5 5 0 0;
-    -fx-padding: 5 15 5 15;
-}
-.tab-pane .tab:selected {
-    -fx-background-color: #0275d8;
-}
-.tab-pane .tab:selected .tab-label {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+    -fx-border-width: 1;
 }
 
-/* Style des champs de texte et ComboBox */
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-padding: 12 25;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: 500;
+    -fx-font-size: 14px;
+    -fx-border-color: transparent transparent transparent transparent;
+    -fx-border-width: 2;
+}
+
+.tab-pane .tab:hover {
+    -fx-text-fill: #0f172a;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2563eb; /* Bleu corporate moderne */
+    -fx-border-color: transparent transparent #2563eb transparent; /* Ligne de sélection sous l'onglet */
+}
+
+/* Cartes de formulaires blanches et épurées */
+.sidebar-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 24;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0f172a;
+    -fx-padding: 0 0 12 0;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-border-width: 1;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0f172a;
+}
+
+.field-label {
+    -fx-font-weight: 600;
+    -fx-text-fill: #475569;
+    -fx-font-size: 12px;
+}
+
+/* Inputs épurés */
 .text-field, .combo-box, .date-picker {
     -fx-background-color: #ffffff;
-    -fx-border-color: #ced4da;
-    -fx-border-radius: 4;
-    -fx-background-radius: 4;
-    -fx-padding: 5;
-}
-.text-field:focused, .combo-box:focused {
-    -fx-border-color: #0275d8;
-    -fx-effect: dropshadow(three-pass-box, rgba(2,117,216,0.3), 5, 0, 0, 0);
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: #0f172a;
 }
 
-/* Style des Tableaux */
+.text-field:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: #2563eb;
+    -fx-effect: transparent;
+}
+
+/* Tableaux professionnels */
 .table-view {
-    -fx-background-color: white;
-    -fx-border-color: #dee2e6;
-    -fx-border-radius: 5;
-}
-.table-view .column-header {
-    -fx-background-color: #e9ecef;
-}
-.table-view .column-header .label {
-    -fx-font-weight: bold;
-    -fx-text-fill: #495057;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
 }
 
-/* Style générique des boutons (effets de survol) */
+.table-view .column-header {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 12;
+    -fx-border-color: transparent #e2e8f0 #e2e8f0 transparent;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: 600;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+}
+
+.table-row-cell {
+    -fx-padding: 4;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+}
+.table-row-cell:filled:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* Boutons plats et modernes */
 .button {
-    -fx-background-radius: 5;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 20;
+    -fx-background-radius: 6;
     -fx-cursor: hand;
 }
-.button:hover {
-    -fx-opacity: 0.85;
+
+.btn-primary { -fx-background-color: #0f172a; -fx-text-fill: white; }
+.btn-primary:hover { -fx-background-color: #1e293b; }
+
+.btn-success { -fx-background-color: #10b981; -fx-text-fill: white; }
+.btn-success:hover { -fx-background-color: #059669; }
+
+.btn-danger  { -fx-background-color: #ef4444; -fx-text-fill: white; }
+.btn-danger:hover { -fx-background-color: #dc2626; }
+
+.btn-warning { -fx-background-color: #f59e0b; -fx-text-fill: white; }
+.btn-info    { -fx-background-color: #06b6d4; -fx-text-fill: white; }
+
+/* Barre de paiement de la caisse */
+.total-bar {
+    -fx-padding: 20;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
 }
