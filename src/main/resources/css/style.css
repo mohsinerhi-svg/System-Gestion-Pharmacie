@@ -1,0 +1,58 @@
+/* Fond général de l'application */
+.root {
+    -fx-background-color: #f4f7f6;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/* Style des onglets (Tabs) */
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #ffffff;
+}
+.tab-pane .tab {
+    -fx-background-color: #e9ecef;
+    -fx-background-radius: 5 5 0 0;
+    -fx-padding: 5 15 5 15;
+}
+.tab-pane .tab:selected {
+    -fx-background-color: #0275d8;
+}
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Style des champs de texte et ComboBox */
+.text-field, .combo-box, .date-picker {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 5;
+}
+.text-field:focused, .combo-box:focused {
+    -fx-border-color: #0275d8;
+    -fx-effect: dropshadow(three-pass-box, rgba(2,117,216,0.3), 5, 0, 0, 0);
+}
+
+/* Style des Tableaux */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 5;
+}
+.table-view .column-header {
+    -fx-background-color: #e9ecef;
+}
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #495057;
+}
+
+/* Style générique des boutons (effets de survol) */
+.button {
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+.button:hover {
+    -fx-opacity: 0.85;
+}

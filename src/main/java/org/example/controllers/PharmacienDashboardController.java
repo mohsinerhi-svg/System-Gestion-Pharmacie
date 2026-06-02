@@ -19,10 +19,10 @@ import java.util.List;
 public class PharmacienDashboardController {
 
     // --- ONGLET 1 : VENTES ET CAISSE ---
+    @FXML private ComboBox<Client> clientCombo;
     @FXML private ComboBox<Medicament> medicamentVenteCombo;
     @FXML private TextField quantiteVenteField;
     @FXML private Label venteMessageLabel;
-
     @FXML private TableView<LigneVente> panierTable;
     @FXML private TableColumn<LigneVente, String> panierNomCol;
     @FXML private TableColumn<LigneVente, Integer> panierQteCol;
@@ -34,10 +34,16 @@ public class PharmacienDashboardController {
     @FXML private TableColumn<Vente, Integer> histIdCol;
     @FXML private TableColumn<Vente, java.sql.Timestamp> histDateCol;
     @FXML private TableColumn<Vente, Double> histTotalCol;
+    @FXML private Label pdfMessageLabel;
+
+    @FXML private TableColumn<Vente, String> histClientCol;
 
     private ObservableList<LigneVente> panierList = FXCollections.observableArrayList();
     private double totalVente = 0.0;
+
     private VenteDAO venteDAO = new VenteDAO();
+    private MedicamentDAO medicamentDAO = new MedicamentDAO();
+    private ClientDAO clientDAO = new ClientDAO();
 
     // --- ONGLET 2 : STOCKS ---
     @FXML private TableView<Medicament> medicamentsTable;
@@ -55,7 +61,16 @@ public class PharmacienDashboardController {
     @FXML private DatePicker dateExpirationPicker;
     @FXML private Label stockMessageLabel;
 
-    private MedicamentDAO medicamentDAO = new MedicamentDAO();
+    // --- ONGLET 4 : CLIENTS ---
+    @FXML private TextField clientNomField;
+    @FXML private TextField clientTelField;
+    @FXML private TextField clientEmailField;
+    @FXML private Label clientMessageLabel;
+    @FXML private TableView<Client> clientsTable;
+    @FXML private TableColumn<Client, Integer> clientIdCol;
+    @FXML private TableColumn<Client, String> clientNomCol;
+    @FXML private TableColumn<Client, String> clientTelCol;
+    @FXML private TableColumn<Client, String> clientEmailCol;
 
     @FXML
     public void initialize() {
@@ -67,6 +82,27 @@ public class PharmacienDashboardController {
         stockCol.setCellValueFactory(new PropertyValueFactory<>("quantiteStock"));
         expirationCol.setCellValueFactory(new PropertyValueFactory<>("dateExpiration"));
 
+        // --- LA MAGIE POUR METTRE LE STOCK EN ROUGE SI < 5 ---
+        stockCol.setCellFactory(column -> {
+            return new TableCell<Medicament, Integer>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(String.valueOf(item));
+                        if (item < 5) {
+                            setStyle("-fx-text-fill: red; -fx-font-weight: bold;"); // Alerte visuelle
+                        } else {
+                            setStyle("-fx-text-fill: black;");
+                        }
+                    }
+                }
+            };
+        });
+
         // Init Colonnes Panier
         panierNomCol.setCellValueFactory(new PropertyValueFactory<>("medicamentNom"));
         panierQteCol.setCellValueFactory(new PropertyValueFactory<>("quantite"));
@@ -76,158 +112,166 @@ public class PharmacienDashboardController {
         // Init Colonnes Historique
         histIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         histDateCol.setCellValueFactory(new PropertyValueFactory<>("dateVente"));
+        histClientCol.setCellValueFactory(new PropertyValueFactory<>("nomClient")); // <-- NOUVEAU
         histTotalCol.setCellValueFactory(new PropertyValueFactory<>("montantTotal"));
-        chargerHistoriqueVentes(); // Charge les données au démarrage
+
+        // Init Colonnes Clients (si vous avez l'onglet 4)
+        // clientIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        // clientNomCol.setCellValueFactory(new PropertyValueFactory<>("nomComplet"));
+        // clientTelCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        // clientEmailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
         chargerMedicaments();
+        chargerHistoriqueVentes();
+        chargerClients();
     }
-
 
     private void chargerMedicaments() {
         List<Medicament> liste = medicamentDAO.getTousLesMedicaments();
         ObservableList<Medicament> data = FXCollections.observableArrayList(liste);
-
-        // On met à jour le tableau des stocks
         medicamentsTable.setItems(data);
-        // On met à jour la liste déroulante des ventes !
         medicamentVenteCombo.setItems(data);
     }
 
-    // =========================================================
-    // LOGIQUE DE L'ONGLET VENTE
-    // =========================================================
+    private void chargerClients() {
+        List<Client> liste = clientDAO.getTousLesClients();
+        ObservableList<Client> data = FXCollections.observableArrayList(liste);
+
+        // Met à jour la liste déroulante dans l'onglet Caisse
+        clientCombo.setItems(data);
+
+        // Met à jour le tableau dans le nouvel onglet Clients
+        clientsTable.setItems(data);
+    }
+
+    @FXML
+    protected void chargerHistoriqueVentes() {
+        List<Vente> listeVentes = venteDAO.getHistoriqueVentes();
+        historiqueTable.setItems(FXCollections.observableArrayList(listeVentes));
+        pdfMessageLabel.setText(""); // Effacer le message PDF au refresh
+    }
+
+    @FXML
+    protected void handleAjouterClient() {
+        String nom = clientNomField.getText();
+        String tel = clientTelField.getText();
+        String email = clientEmailField.getText();
+
+        if (nom.isEmpty()) {
+            clientMessageLabel.setStyle("-fx-text-fill: red;");
+            clientMessageLabel.setText("Le nom est obligatoire.");
+            return;
+        }
+
+        if (clientDAO.ajouterClient(nom, tel, email)) {
+            clientMessageLabel.setStyle("-fx-text-fill: green;");
+            clientMessageLabel.setText("Client ajouté !");
+            clientNomField.clear(); clientTelField.clear(); clientEmailField.clear();
+
+            // Cette ligne magique met à jour le tableau ET la liste déroulante de la caisse !
+            chargerClients();
+        } else {
+            clientMessageLabel.setStyle("-fx-text-fill: red;");
+            clientMessageLabel.setText("Erreur lors de l'ajout.");
+        }
+    }
 
     @FXML
     protected void handleAjouterAuPanier() {
         Medicament med = medicamentVenteCombo.getValue();
-
         if (med == null) {
-            venteMessageLabel.setStyle("-fx-text-fill: red;");
             venteMessageLabel.setText("Veuillez sélectionner un médicament.");
             return;
         }
-
         try {
             int qteDemande = Integer.parseInt(quantiteVenteField.getText());
-
-            if (qteDemande <= 0) {
-                venteMessageLabel.setText("La quantité doit être supérieure à 0.");
+            if (qteDemande <= 0 || qteDemande > med.getQuantiteStock()) {
+                venteMessageLabel.setText("Quantité invalide ou stock insuffisant !");
                 return;
             }
-            if (qteDemande > med.getQuantiteStock()) {
-                venteMessageLabel.setText("Stock insuffisant ! Il ne reste que " + med.getQuantiteStock() + " en stock.");
-                return;
-            }
-
-            // Calcul du sous-total
             double sousTotal = qteDemande * med.getPrixUnitaire();
-
-            // Ajouter au panier
-            LigneVente ligne = new LigneVente(med.getId(), med.getNom(), qteDemande, sousTotal);
-            panierList.add(ligne);
-
-            // Mettre à jour le total général
+            panierList.add(new LigneVente(med.getId(), med.getNom(), qteDemande, sousTotal));
             totalVente += sousTotal;
             totalLabel.setText(String.format("%.2f Dhs", totalVente));
-
             venteMessageLabel.setStyle("-fx-text-fill: green;");
             venteMessageLabel.setText("Ajouté au panier !");
             quantiteVenteField.clear();
-
         } catch (NumberFormatException e) {
-            venteMessageLabel.setStyle("-fx-text-fill: red;");
             venteMessageLabel.setText("Quantité invalide.");
         }
     }
 
     @FXML
     protected void handleValiderVente() {
-        if (panierList.isEmpty()) {
-            venteMessageLabel.setStyle("-fx-text-fill: red;");
-            venteMessageLabel.setText("Le panier est vide !");
-            return;
+        if (panierList.isEmpty()) return;
+
+        // Récupérer l'ID du client sélectionné, ou null s'il n'y en a pas
+        Integer clientId = null;
+        if (clientCombo.getValue() != null) {
+            clientId = clientCombo.getValue().getId();
         }
 
-        // 1 est l'ID de l'utilisateur par défaut. Plus tard on pourra récupérer l'ID réel connecté.
-        boolean success = venteDAO.realiserVente(1, null, panierList, totalVente);
+        boolean success = venteDAO.realiserVente(1, clientId, panierList, totalVente);
 
         if (success) {
-            // Vider le panier
             panierList.clear();
             totalVente = 0.0;
             totalLabel.setText("0.00 Dhs");
+            clientCombo.setValue(null); // Réinitialiser le client
 
-            // Rafraîchir les stocks dans toute l'application
             chargerMedicaments();
-
-            // ---> LIGNE MANQUANTE AJOUTÉE ICI <---
-            chargerHistoriqueVentes(); // Met à jour le tableau de l'historique !
-
+            chargerHistoriqueVentes();
             venteMessageLabel.setStyle("-fx-text-fill: green;");
-            venteMessageLabel.setText("Vente validée avec succès ! Le stock a été mis à jour.");
+            venteMessageLabel.setText("Vente validée !");
         } else {
             venteMessageLabel.setStyle("-fx-text-fill: red;");
-            venteMessageLabel.setText("Erreur lors de la vente. Vérifiez les stocks.");
+            venteMessageLabel.setText("Erreur lors de la vente.");
         }
     }
 
-    // =========================================================
-    // LOGIQUE DE L'ONGLET STOCK (Même code qu'avant)
-    // =========================================================
+    @FXML
+    protected void handleImprimerFacture() {
+        Vente venteSelectionnee = historiqueTable.getSelectionModel().getSelectedItem();
+        if (venteSelectionnee == null) {
+            pdfMessageLabel.setStyle("-fx-text-fill: red;");
+            pdfMessageLabel.setText("Sélectionnez une vente dans le tableau !");
+            return;
+        }
+
+        if (GenerateurPDF.genererFacture(venteSelectionnee)) {
+            pdfMessageLabel.setStyle("-fx-text-fill: green;");
+            pdfMessageLabel.setText("Facture générée dans le dossier de votre projet !");
+        } else {
+            pdfMessageLabel.setStyle("-fx-text-fill: red;");
+            pdfMessageLabel.setText("Erreur lors de la création du PDF.");
+        }
+    }
 
     @FXML
     protected void handleAjouterMedicament() {
         String nom = nomField.getText();
         String categorie = categorieField.getText();
         LocalDate dateExpiration = dateExpirationPicker.getValue();
-
         try {
-            double prixUnitaire = Double.parseDouble(prixField.getText());
-            int quantiteStock = Integer.parseInt(stockField.getText());
-
-            if (nom.isEmpty()) {
-                stockMessageLabel.setText("Le nom est obligatoire.");
-                return;
-            }
-
-            if (medicamentDAO.ajouterMedicament(nom, categorie, prixUnitaire, quantiteStock, dateExpiration)) {
+            if (medicamentDAO.ajouterMedicament(nom, categorie, Double.parseDouble(prixField.getText()), Integer.parseInt(stockField.getText()), dateExpiration)) {
                 stockMessageLabel.setStyle("-fx-text-fill: green;");
                 stockMessageLabel.setText("Médicament ajouté !");
                 nomField.clear(); categorieField.clear(); prixField.clear(); stockField.clear(); dateExpirationPicker.setValue(null);
                 chargerMedicaments();
-            } else {
-                stockMessageLabel.setStyle("-fx-text-fill: red;");
-                stockMessageLabel.setText("Erreur lors de l'ajout.");
             }
         } catch (NumberFormatException e) {
-            stockMessageLabel.setStyle("-fx-text-fill: red;");
             stockMessageLabel.setText("Prix et Stock invalides.");
         }
     }
-
-    // =========================================================
-    // DECONNEXION
-    // =========================================================
 
     @FXML
     protected void handleLogout(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/Login.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 400);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Gestion de Pharmacie - Connexion");
+            stage.setScene(new Scene(fxmlLoader.load(), 800, 400));
             stage.centerOnScreen();
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    protected void chargerHistoriqueVentes() {
-        List<Vente> listeVentes = venteDAO.getHistoriqueVentes();
-        ObservableList<Vente> dataVentes = FXCollections.observableArrayList(listeVentes);
-        historiqueTable.setItems(dataVentes);
+        } catch (IOException e) { e.printStackTrace(); }
     }
 }

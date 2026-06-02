@@ -61,4 +61,34 @@ public class MedicamentDAO {
             return false;
         }
     }
+    /**
+     * Récupère les médicaments dont le stock est inférieur ou égal à un seuil.
+     */
+    public List<Medicament> getMedicamentsEnRupture(int seuil) {
+        List<Medicament> liste = new ArrayList<>();
+        String sql = "SELECT * FROM medicaments WHERE quantite_stock <= ? ORDER BY quantite_stock ASC";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, seuil);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    java.sql.Date sqlDate = rs.getDate("date_expiration");
+                    java.time.LocalDate localDate = (sqlDate != null) ? sqlDate.toLocalDate() : null;
+
+                    liste.add(new Medicament(
+                            rs.getInt("id"),
+                            rs.getString("nom"),
+                            rs.getString("categorie"),
+                            rs.getDouble("prix_unitaire"),
+                            rs.getInt("quantite_stock"),
+                            localDate
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return liste;
+    }
 }

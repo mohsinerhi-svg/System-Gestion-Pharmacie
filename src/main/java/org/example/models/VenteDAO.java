@@ -111,7 +111,10 @@ public class VenteDAO {
      */
     public List<Vente> getHistoriqueVentes() {
         List<Vente> liste = new java.util.ArrayList<>();
-        String sql = "SELECT id, montant_total, date_vente FROM ventes ORDER BY date_vente DESC";
+        //  LEFT JOIN pour récupérer le nom du client
+        String sql = "SELECT v.id, v.montant_total, v.date_vente, c.nom_complet " +
+                "FROM ventes v LEFT JOIN clients c ON v.client_id = c.id " +
+                "ORDER BY v.date_vente DESC";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -121,12 +124,30 @@ public class VenteDAO {
                 liste.add(new Vente(
                         rs.getInt("id"),
                         rs.getDouble("montant_total"),
-                        rs.getTimestamp("date_vente")
+                        rs.getTimestamp("date_vente"),
+                        rs.getString("nom_complet")
                 ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return liste;
+    }
+
+    /**
+     * Calcule le chiffre d'affaires total de la pharmacie.
+     */
+    public double getChiffreAffairesTotal() {
+        String sql = "SELECT SUM(montant_total) FROM ventes";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
     }
 }

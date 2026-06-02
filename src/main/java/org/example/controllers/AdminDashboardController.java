@@ -10,48 +10,69 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.example.models.Medicament;
+import org.example.models.MedicamentDAO;
 import org.example.models.Utilisateur;
 import org.example.models.UtilisateurDAO;
+import org.example.models.VenteDAO;
 
 import java.io.IOException;
 import java.util.List;
 
 public class AdminDashboardController {
 
+    // --- ONGLET 1 : UTILISATEURS ---
     @FXML private TableView<Utilisateur> utilisateursTable;
     @FXML private TableColumn<Utilisateur, Integer> idCol;
     @FXML private TableColumn<Utilisateur, String> usernameCol;
     @FXML private TableColumn<Utilisateur, String> roleCol;
-
     @FXML private TextField newUsernameField;
     @FXML private PasswordField newPasswordField;
     @FXML private ComboBox<String> roleComboBox;
     @FXML private Label messageLabel;
 
-    private UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
-    private ObservableList<Utilisateur> utilisateursList;
+    // --- ONGLET 2 : STATISTIQUES ---
+    @FXML private Label caTotalLabel;
+    @FXML private TableView<Medicament> ruptureTable;
+    @FXML private TableColumn<Medicament, Integer> rupIdCol;
+    @FXML private TableColumn<Medicament, String> rupNomCol;
+    @FXML private TableColumn<Medicament, Integer> rupStockCol;
 
-    /**
-     * Cette méthode est appelée automatiquement par JavaFX quand la page s'ouvre.
-     */
+    private UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+    private VenteDAO venteDAO = new VenteDAO();
+    private MedicamentDAO medicamentDAO = new MedicamentDAO();
+
     @FXML
     public void initialize() {
-        // Configurer les colonnes du tableau pour qu'elles lisent les attributs de la classe Utilisateur
+        // Init Colonnes Utilisateurs
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
-
-        // Remplir la liste déroulante des rôles
         roleComboBox.setItems(FXCollections.observableArrayList("PHARMACIEN", "ADMIN"));
 
-        // Charger les données depuis PostgreSQL
+        // Init Colonnes Ruptures de Stock
+        rupIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        rupNomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        rupStockCol.setCellValueFactory(new PropertyValueFactory<>("quantiteStock"));
+
         chargerUtilisateurs();
+        chargerStatistiques();
     }
 
     private void chargerUtilisateurs() {
         List<Utilisateur> liste = utilisateurDAO.getTousLesUtilisateurs();
-        utilisateursList = FXCollections.observableArrayList(liste);
-        utilisateursTable.setItems(utilisateursList);
+        utilisateursTable.setItems(FXCollections.observableArrayList(liste));
+    }
+
+    @FXML
+    protected void chargerStatistiques() {
+        // 1. Charger le chiffre d'affaires
+        double caTotal = venteDAO.getChiffreAffairesTotal();
+        caTotalLabel.setText(String.format("%.2f €", caTotal));
+
+        // 2. Charger les médicaments en rupture (stock <= 5)
+        List<Medicament> ruptures = medicamentDAO.getMedicamentsEnRupture(5);
+        ruptureTable.setItems(FXCollections.observableArrayList(ruptures));
     }
 
     @FXML
@@ -66,22 +87,14 @@ public class AdminDashboardController {
             return;
         }
 
-        boolean succes = utilisateurDAO.ajouterUtilisateur(username, password, role);
-
-        if (succes) {
+        if (utilisateurDAO.ajouterUtilisateur(username, password, role)) {
             messageLabel.setStyle("-fx-text-fill: green;");
             messageLabel.setText("Utilisateur ajouté avec succès !");
-
-            // Vider les champs
-            newUsernameField.clear();
-            newPasswordField.clear();
-            roleComboBox.setValue(null);
-
-            // Rafraîchir le tableau
+            newUsernameField.clear(); newPasswordField.clear(); roleComboBox.setValue(null);
             chargerUtilisateurs();
         } else {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Erreur lors de l'ajout. Le nom d'utilisateur existe peut-être déjà.");
+            messageLabel.setText("Erreur. Ce nom existe peut-être déjà.");
         }
     }
 
@@ -89,9 +102,8 @@ public class AdminDashboardController {
     protected void handleLogout(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/Login.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 400, 400);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
+            stage.setScene(new Scene(fxmlLoader.load(), 800, 400));
             stage.setTitle("Gestion de Pharmacie - Connexion");
             stage.centerOnScreen();
             stage.show();
